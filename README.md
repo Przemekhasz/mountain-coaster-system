@@ -1,68 +1,225 @@
-# CodeIgniter 4 Application Starter
+# Mountain Roller Coaster System 🎢
 
-## What is CodeIgniter?
+## Overview
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+This application is an API-based system for managing mountain roller coasters, their wagons, and monitoring system capacity. Built using CodeIgniter 4, this system runs in both development and production environments and uses Redis for data storage.
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+## Architecture
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+The project follows clean architecture principles, implementing several design patterns:
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+- **Domain-Driven Design (DDD)** - Focusing on the core domain models and business logic
+- **Command Query Responsibility Segregation (CQRS)** - Separating read and write operations
+- **Repository Pattern** - For data access abstraction
+- **Dependency Injection** - For loose coupling and testability
+- **Event-Driven Architecture** - For system notifications and monitoring
+- **Value Objects** - For encapsulating domain concepts
 
-## Installation & updates
+## System Features
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+- Management of roller coasters with operating hours, staff, and capacity metrics
+- Management of wagons with seat capacity and speed attributes 
+- Staff requirement calculations and shortage alerts
+- Client capacity analysis and wagon requirement calculations
+- Real-time monitoring through an asynchronous CLI service
+- Separate development and production environments
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+## Installation
 
-## Setup
+### Requirements
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+- PHP 8.0 or higher
+- Docker and Docker Compose
+- Composer
 
-## Important Change with index.php
+### Setup
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+1. Clone the repository:
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+```bash
+git clone https://github.com/yourusername/mountain-coaster-system.git
+cd mountain-coaster-system
+```
 
-**Please** read the user guide for a better explanation of how CI4 works!
+2. Install dependencies:
 
-## Repository Management
+```bash
+composer install
+```
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+3. Set up environment:
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+```bash
+cp env .env
+```
 
-## Server Requirements
+4. Start the development environment:
 
-PHP version 8.1 or higher is required, with the following extensions installed:
+```bash
+cd docker/dev
+docker-compose up -d
+```
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+5. For production:
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> - The end of life date for PHP 8.1 will be December 31, 2025.
+```bash
+cd docker/prod
+docker-compose up -d
+```
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+## API Endpoints
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+### Roller Coasters
+
+- **POST /api/coasters** - Register a new roller coaster
+  ```json
+  {
+    "liczba_personelu": 16,
+    "liczba_klientow": 60000,
+    "dl_trasy": 1800,
+    "godziny_od": "8:00",
+    "godziny_do": "16:00"
+  }
+  ```
+
+- **PUT /api/coasters/:coasterId** - Update an existing roller coaster
+  ```json
+  {
+    "liczba_personelu": 20,
+    "liczba_klientow": 70000,
+    "godziny_od": "9:00",
+    "godziny_do": "17:00"
+  }
+  ```
+
+- **GET /api/coasters/:coasterId** - Get details of a roller coaster
+
+- **GET /api/statistics** - Get system-wide statistics
+
+### Wagons
+
+- **POST /api/coasters/:coasterId/wagons** - Add a new wagon to a roller coaster
+  ```json
+  {
+    "ilosc_miejsc": 32,
+    "predkosc_wagonu": 1.2
+  }
+  ```
+
+- **DELETE /api/coasters/:coasterId/wagons/:wagonId** - Remove a wagon from a roller coaster
+
+## Monitoring Service
+
+The system includes a real-time asynchronous monitoring service that displays the status of all roller coasters and identifies potential issues.
+
+To start the monitoring service:
+
+```bash
+php spark monitor
+```
+
+The monitoring service will display:
+- List of all roller coasters with their current status
+- Operating hours for each coaster
+- Number of wagons and staff
+- Client capacity
+- Any issues detected (staff shortages, wagon deficits)
+- System-wide statistics
+
+Example output:
+
+```
+[Godzina 14:27]
+
+[Kolejka A1]
+1. Godziny działania: 08:00 - 18:00
+2. Liczba wagonów: 5/5
+3. Dostępny personel: 12/12
+4. Klienci dziennie: 200
+5. Status: OK
+
+[Kolejka A2]
+1. Godziny działania: 09:00 - 17:00
+2. Liczba wagonów: 4/6
+3. Dostępny personel: 8/10
+4. Klienci dziennie: 150
+5. Problem: Brakuje 2 pracowników, brak 2 wagonów
+```
+
+## Technical Design
+
+### Domain Layer
+
+The domain layer contains the core business logic and entities:
+
+- **Entities**: Coaster, Wagon
+- **Value Objects**: OperatingHours, Speed
+- **Domain Events**: CoasterRegistered, WagonAdded, StaffShortage, ClientCapacityIssue
+
+### Application Layer
+
+The application layer orchestrates the use cases:
+
+- **Commands**: RegisterCoaster, RegisterWagon, RemoveWagon, UpdateCoaster
+- **Queries**: GetCoasterDetails, GetSystemStatistics
+- **DTOs**: CoasterDTO, WagonDTO
+
+### Infrastructure Layer
+
+The infrastructure layer handles technical concerns:
+
+- **Repositories**: RedisCoasterRepository, RedisWagonRepository
+- **Services**: EventDispatcher, LoggingService, IdGenerator
+- **CLI**: MonitoringService
+
+### Configuration
+
+- Separate Docker environments for development and production
+- Redis configuration for data persistence
+- Environment-specific logging levels
+
+## Development vs. Production Environments
+
+### Development Environment
+
+- All log levels are recorded
+- Runs on port 8080
+- Data is isolated from production
+- Meant for testing and development
+
+### Production Environment
+
+- Only warning and error logs are recorded
+- Runs on port 80
+- Optimized for performance
+- Isolated data store
+
+## Best Practices Implemented
+
+- **SOLID Principles**
+  - Single Responsibility Principle - Each class has one job
+  - Open/Closed Principle - Entities are extendable without modification
+  - Liskov Substitution Principle - Repositories use interfaces
+  - Interface Segregation - Specific interfaces for specific clients
+  - Dependency Inversion - High-level modules don't depend on low-level modules
+
+- **Clean Code**
+  - Meaningful variable and method names
+  - Small, focused methods
+  - Proper exception handling
+  - Input validation
+  - Comprehensive comments
+
+- **Error Handling**
+  - Domain-specific exceptions
+  - Graceful error responses
+  - Comprehensive logging
+
+- **Testability**
+  - Dependency injection
+  - Mockable interfaces
+  - Unit test structure
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
