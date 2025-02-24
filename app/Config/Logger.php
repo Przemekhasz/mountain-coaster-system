@@ -7,6 +7,14 @@ use CodeIgniter\Log\Handlers\FileHandler;
 
 class Logger extends BaseConfig
 {
+    public function __construct()
+    {
+        parent::__construct();
+
+        if (ENVIRONMENT === 'production') {
+            $this->threshold = $this->productionThreshold;
+        }
+    }
     /**
      * --------------------------------------------------------------------------
      * Error Logging Threshold
@@ -36,9 +44,15 @@ class Logger extends BaseConfig
      * For a live site you'll usually enable Critical or higher (3) to be logged otherwise
      * your log files will fill up very fast.
      *
-     * @var int|list<int>
+     * @var int
      */
-    public $threshold = (ENVIRONMENT === 'production') ? 4 : 9;
+    public int $threshold = 8;
+
+    /**
+     * Threshold for the production environment.
+     * In production, only warnings and errors should be logged.
+     */
+    public int $productionThreshold = 4;
 
     /**
      * --------------------------------------------------------------------------
@@ -49,6 +63,21 @@ class Logger extends BaseConfig
      * codes to set your own date formatting
      */
     public string $dateFormat = 'Y-m-d H:i:s';
+
+    /**
+     * File path for logs.
+     */
+    public string $path = WRITEPATH . 'logs/';
+
+    /**
+     * Default log file extension.
+     */
+    public string $fileExtension = 'log';
+
+    /**
+     * File permissions.
+     */
+    public int $filePermissions = 0644;
 
     /**
      * --------------------------------------------------------------------------

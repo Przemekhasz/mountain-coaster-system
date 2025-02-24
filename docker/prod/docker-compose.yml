@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: php/Dockerfile
+    volumes:
+      - ../../:/var/www/html
+    environment:
+      - CI_ENVIRONMENT=production
+      - APP_ENV=prod
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+    networks:
+      - coaster-net
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ../../:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - coaster-net
+
+  redis:
+    image: redis:alpine
+    volumes:
+      - redis-data-prod:/data
+    networks:
+      - coaster-net
+
+networks:
+  coaster-net:
+    driver: bridge
+
+volumes:
+  redis-data-prod:
