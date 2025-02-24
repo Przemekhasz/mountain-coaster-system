@@ -37,7 +37,7 @@ The project follows clean architecture principles, implementing several design p
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/mountain-coaster-system.git
+git clone https://github.com/Przemekhasz/mountain-coaster-system.git
 cd mountain-coaster-system
 ```
 
