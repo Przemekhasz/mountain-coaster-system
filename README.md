@@ -118,33 +118,52 @@ To start the monitoring service:
 php spark monitor
 ```
 
-The monitoring service will display:
-- List of all roller coasters with their current status
-- Operating hours for each coaster
-- Number of wagons and staff
-- Client capacity
-- Any issues detected (staff shortages, wagon deficits)
-- System-wide statistics
+### Screenshots
 
-Example output:
+Here are some screenshots demonstrating the system in action:
 
-```
-[Godzina 14:27]
+#### API Operations
 
-[Kolejka A1]
-1. Godziny działania: 08:00 - 18:00
-2. Liczba wagonów: 5/5
-3. Dostępny personel: 12/12
-4. Klienci dziennie: 200
-5. Status: OK
+![Creating a New Roller Coaster](screenshots/create_coasters.png)
+*API Response when creating a new roller coaster with specified parameters*
 
-[Kolejka A2]
-1. Godziny działania: 09:00 - 17:00
-2. Liczba wagonów: 4/6
-3. Dostępny personel: 8/10
-4. Klienci dziennie: 150
-5. Problem: Brakuje 2 pracowników, brak 2 wagonów
-```
+![Adding Wagons to a Coaster](screenshots/create_wagons.png)
+*Adding new wagons to increase the capacity of a roller coaster*
+
+![Removing a Wagon](screenshots/delete.png)
+*Deleting a wagon from the system when it's no longer needed*
+
+![Getting Coaster Details](screenshots/get_coaster.png)
+*Retrieving detailed information about a specific roller coaster*
+
+![Updating Coaster Parameters](screenshots/update_coaster.png)
+*Modifying an existing roller coaster's operating parameters*
+
+![System Statistics](screenshots/stats.png)
+*Overview of system-wide statistics showing all coasters and resources*
+
+![System Logs](screenshots/logs.png)
+*Log entries showing detected problems and system notifications*
+
+#### CLI Monitoring Tool
+
+The following screenshots show the CLI monitoring tool in action with real-time updates and status information:
+
+![Monitoring Console View 1](screenshots/spark1.png)
+*Real-time monitoring console showing coaster status and statistics*
+
+![Monitoring Console View 2](screenshots/spark2.png)
+*Monitoring display with detailed capacity and staffing metrics*
+
+![Monitoring Console View 3](screenshots/spark3.png)
+*CLI monitoring showing detected issues and resource allocation*
+
+![Monitoring Console View 4](screenshots/spark4.png)
+*Status overview with multiple coasters and their operating parameters*
+
+![Monitoring Console View 5](screenshots/spark5.png)
+*System performance metrics and capacity analysis in the monitoring console*
+Example console output:
 
 ## Technical Design
 
