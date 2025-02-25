@@ -17,14 +17,12 @@ use App\Infrastructure\Services\UuidGenerator;
 
 class Services extends BaseService
 {
-    // Metoda do rejestracji RegisterCoasterHandler
     public static function registerCoasterHandler($getShared = true)
     {
         if ($getShared) {
             return static::getSharedInstance('registerCoasterHandler');
         }
 
-        // Tworzenie zależności
         $environment = getenv('APP_ENV') ?: 'prod';
         $redisPrefix = ($environment === 'dev') ? 'dev' : 'prod';
 
@@ -37,14 +35,12 @@ class Services extends BaseService
         return new RegisterCoasterHandler($coasterRepository, $eventDispatcher, $idGenerator);
     }
 
-    // Metoda do rejestracji RegisterWagonHandler
     public static function registerWagonHandler($getShared = true)
     {
         if ($getShared) {
             return static::getSharedInstance('registerWagonHandler');
         }
 
-        // Tworzenie zależności
         $environment = getenv('APP_ENV') ?: 'prod';
         $redisPrefix = ($environment === 'dev') ? 'dev' : 'prod';
 
@@ -57,14 +53,12 @@ class Services extends BaseService
         return new RegisterWagonHandler($coasterRepository, $wagonRepository, $eventDispatcher, $idGenerator);
     }
 
-    // Metoda do rejestracji RemoveWagonHandler
     public static function removeWagonHandler($getShared = true)
     {
         if ($getShared) {
             return static::getSharedInstance('removeWagonHandler');
         }
 
-        // Tworzenie zależności
         $environment = getenv('APP_ENV') ?: 'prod';
         $redisPrefix = ($environment === 'dev') ? 'dev' : 'prod';
 
@@ -76,14 +70,12 @@ class Services extends BaseService
         return new RemoveWagonHandler($coasterRepository, $wagonRepository, $eventDispatcher);
     }
 
-    // Metoda do rejestracji UpdateCoasterHandler
     public static function updateCoasterHandler($getShared = true)
     {
         if ($getShared) {
             return static::getSharedInstance('updateCoasterHandler');
         }
 
-        // Tworzenie zależności
         $environment = getenv('APP_ENV') ?: 'prod';
         $redisPrefix = ($environment === 'dev') ? 'dev' : 'prod';
 
@@ -95,14 +87,12 @@ class Services extends BaseService
         return new UpdateCoasterHandler($coasterRepository, $eventDispatcher);
     }
 
-    // Metoda do rejestracji GetCoasterDetailsHandler
     public static function getCoasterDetailsHandler($getShared = true)
     {
         if ($getShared) {
             return static::getSharedInstance('getCoasterDetailsHandler');
         }
 
-        // Tworzenie zależności
         $environment = getenv('APP_ENV') ?: 'prod';
         $redisPrefix = ($environment === 'dev') ? 'dev' : 'prod';
 
@@ -112,14 +102,12 @@ class Services extends BaseService
         return new GetCoasterDetailsHandler($coasterRepository);
     }
 
-    // Metoda do rejestracji GetSystemStatisticsHandler
     public static function getSystemStatisticsHandler($getShared = true)
     {
         if ($getShared) {
             return static::getSharedInstance('getSystemStatisticsHandler');
         }
 
-        // Tworzenie zależności
         $environment = getenv('APP_ENV') ?: 'prod';
         $redisPrefix = ($environment === 'dev') ? 'dev' : 'prod';
 
