@@ -41,6 +41,7 @@ class Autoload extends AutoloadConfig
      */
     public $psr4 = [
         APP_NAMESPACE => APPPATH,
+        'Config'      => APPPATH . 'Config',
     ];
 
     /**
@@ -60,7 +61,10 @@ class Autoload extends AutoloadConfig
      *
      * @var array<string, string>
      */
-    public $classmap = [];
+    public $classmap = [
+        'App\Infrastructure\Services\UuidGenerator' => APPPATH . 'Infrastructure/Services/UuidGenerator.php',
+        'App\Infrastructure\Services\IdGeneratorInterface' => APPPATH . 'Infrastructure/Services/IdGeneratorInterface.php'
+    ];
 
     /**
      * -------------------------------------------------------------------
