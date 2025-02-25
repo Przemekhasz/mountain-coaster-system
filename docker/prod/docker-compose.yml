@@ -9,7 +9,7 @@ services:
       - ../../:/var/www/html
     environment:
       - CI_ENVIRONMENT=production
-      - APP_ENV=prod
+      - APP_ENV=prod php spark monitor
       - REDIS_HOST=redis
     depends_on:
       - redis
